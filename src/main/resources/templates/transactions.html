@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Transactions</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/styles.css}" />
+</head>
+<body>
+<h1>Transactions</h1>
+<table>
+    <tr>
+        <th>Transaction ID</th>
+        <th>Transaction Amount</th>
+        <th>Transaction Date</th>
+    </tr>
+    <!-- A loop to print transactions, replace transactionList and fields with your actual variables -->
+    <tr th:each="transaction : ${transactions}">
+        <td th:text="${transaction.id}">Transaction ID</td>
+        <td th:text="${transaction.amount}">Transaction Amount</td>
+        <td th:text="${transaction.date}">Transaction Date</td>
+    </tr>
+</table>
+</body>
+</html>

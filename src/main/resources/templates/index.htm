@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard Home</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1 class="my-4">Welcome to the Dashboard</h1>
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <button class="btn btn-primary btn-block" onclick="location.href='/'">Home</button>
+        </div>
+        <div class="col-md-3">
+            <button class="btn btn-primary btn-block" onclick="location.href='/categories'">Categories</button>
+        </div>
+        <div class="col-md-3">
+            <button class="btn btn-primary btn-block" onclick="location.href='/transactions'">Transactions</button>
+        </div>
+        <div class="col-md-3">
+            <button class="btn btn-primary btn-block" onclick="downloadReport()">Download Report</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">User Registration</h5>
+                    <p class="card-text">Register a new user account.</p>
+                    <a href="/register" class="btn btn-primary">Register</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">User Login</h5>
+                    <p class="card-text">Login to your account.</p>
+                    <a href="/login" class="btn btn-primary">Login</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Forgot Password</h5>
+                    <p class="card-text">Reset your password.</p>
+                    <a href="/forgot-password" class="btn btn-primary">Reset Password</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <canvas id="userGraph" width="400" height="200"></canvas>
+        </div>
+    </div>
+</div>
+<script>
+        async function fetchTransactions(userId, startDate, endDate) {
+            const response = await fetch(`/api/graphs/user/${userId}?startDate=${startDate}&endDate=${endDate}`);
+            return await response.json();
+        }
+
+        function createGraph(data) {
+            const ctx = document.getElementById('userGraph').getContext('2d');
+            const labels = data.map(tx => new Date(tx.date).toLocaleDateString());
+            const amounts = data.map(tx => tx.isBenefit ? tx.amount : -tx.amount);
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'User Loss and Benefits',
+                        data: amounts,
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        function downloadReport() {
+            // Implement the logic to download the report
+            window.location.href = '/download-report';
+        }
+
+        // Example usage
+        const userId = 1;
+        const startDate = '2024-01-01';
+        const endDate = '2024-12-31';
+
+        fetchTransactions(userId, startDate, endDate).then(data => createGraph(data));
+    </script>
+</body>
+</html>
